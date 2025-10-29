@@ -1,9 +1,11 @@
 // utils/supabase/server.ts
 import { createServerClient } from '@supabase/ssr'
-import { cookies } from 'next/headers'
+import { cookies, ReadonlyRequestCookies } from 'next/headers'
 
 export async function createClient() {
-  const cookieStore = cookies()
+  // --- PERBAIKAN: GUNAKAN AS ReadonlyRequestCookies ---
+  const cookieStore = cookies() as ReadonlyRequestCookies
+  // ----------------------------------------------------
 
   return createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -11,14 +13,18 @@ export async function createClient() {
     {
       cookies: {
         get(name: string) {
-          // UBAH DARI getAll() MENJADI get(name)
+          // Sekarang 'cookieStore.get' tidak akan error
           return cookieStore.get(name)
         },
         set(name, value, options) {
+            // Karena ini di Server Component, Supabase SSR hanya
+            // menggunakan get/getAll/setAll/remove.
+            // set dan remove ini mungkin tidak digunakan
+            // tetapi kita biarkan untuk kelengkapan Supabase SSR.
             cookieStore.set(name, value, options)
         },
         remove(name, options) {
-            cookieStore.set(name, '', options) // set value empty to remove
+            cookieStore.set(name, '', options)
         },
       },
     }
