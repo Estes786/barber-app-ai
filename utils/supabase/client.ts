@@ -1,8 +1,9 @@
 // utils/supabase/client.ts
 import { createBrowserClient } from '@supabase/ssr'
 
+// Kita gunakan '!' untuk memastikan nilai tidak null, karena kita tahu
+// env var sudah ada di Vercel
 export function createClient() {
-  // Create a supabase client configured to use cookies
   return createBrowserClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
