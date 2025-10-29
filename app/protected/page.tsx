@@ -1,14 +1,16 @@
-// app/protected/page.tsx (Contoh, tergantung struktur template Anda)
+// app/protected/page.tsx (Pastikan file ini sudah di-update)
 import { createClient } from '@/utils/supabase/server';
 import { redirect } from 'next/navigation';
-import UploadForm from './UploadForm'; // Import komponen yang baru dibuat
+import UploadForm from './UploadForm'; 
 
 export default async function ProtectedPage() {
-  const supabase = createClient();
+  // --- PERBAIKAN: TAMBAHKAN 'await' SAAT MEMANGGIL createClient() ---
+  const supabase = await createClient(); 
+  // ------------------------------------------------------------------
 
   const {
     data: { user },
-  } = await supabase.auth.getUser();
+  } = await supabase.auth.getUser(); // Sekarang 'supabase' sudah menjadi objek klien
 
   if (!user) {
     return redirect('/login');
